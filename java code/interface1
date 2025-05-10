@@ -1,0 +1,75 @@
+
+
+// Parent Interface
+interface Machine {
+    void start(); // Abstract method
+
+    default void stop() {
+        System.out.println("Machine stopped (default method).");
+    }
+
+    static void checkStatus() {
+        System.out.println("Machine status: OK (static method).");
+    }
+
+    private void privateHelper() {
+        System.out.println("This is a private helper (Java 9+).");
+    }
+
+    default void runDiagnostics() {
+        privateHelper(); // Reuse via private method
+        System.out.println("Running diagnostics...");
+    }
+}
+
+// Another Interface
+interface SmartDevice {
+    void connect();
+
+    default void disconnect() {
+        System.out.println("SmartDevice disconnected.");
+    }
+}
+
+// Implementing class with multiple interfaces
+class Robot implements Machine, SmartDevice {
+
+    @Override
+    public void start() {
+        System.out.println("Robot starting...");
+    }
+
+    @Override
+    public void connect() {
+        System.out.println("Robot connected to network.");
+    }
+
+    // Overriding default method (optional)
+    @Override
+    public void disconnect() {
+        System.out.println("Robot disconnected securely.");
+    }
+}
+
+// Main class to test everything
+public class InterfaceDemo {
+    public static void main(String[] args) {
+        // 1. Object of Robot class using interfaces
+        Robot myRobot = new Robot();
+        myRobot.start();          // Abstract method
+        myRobot.connect();        // Abstract method from second interface
+        myRobot.stop();           // Default method
+        myRobot.disconnect();     // Overridden default method
+        myRobot.runDiagnostics(); // Default using private method
+
+        // 2. Static method from interface
+        Machine.checkStatus();
+
+        // 3. Lambda expression using functional interface
+        Calculator add = (a, b) -> a + b;
+        Calculator multiply = (a, b) -> a * b;
+
+        System.out.println("Addition: " + add.operate(5, 3));       // 8
+        System.out.println("Multiplication: " + multiply.operate(5, 3)); // 15
+    }
+}
